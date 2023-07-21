@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Train;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Faker\Generator as Faker;
 
 class TrainSeeder extends Seeder
 {
@@ -13,34 +14,8 @@ class TrainSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(Faker $faker)
     {
-        $testTrainsList = [
-            [
-                'company' => 'Trenitalia2',
-                'departure_station' => 'Lecco',
-                'arrival_station' => 'Monza',
-                'departure_time' => '2023-07-21 10:00:00',
-                'arrival_time' => '2023-07-21 15:30:00',
-                'train_code' => 'f678fefBYrrr',
-                'num_carriages' => 4,
-                'on_time' => true,
-                'canceled' => false,
-                'additional_info' => null,
-            ],
-            [
-                'company' => 'Treno Giapponese',
-                'departure_station' => 'Lecco',
-                'arrival_station' => 'Monza',
-                'departure_time' => '2023-07-21 10:00:00',
-                'arrival_time' => '2023-07-21 15:30:00',
-                'train_code' => 'fewkjfbwek',
-                'num_carriages' => 4,
-                'on_time' => true,
-                'canceled' => false,
-                'additional_info' => null,
-            ],
-        ];
 
         // foreach ($testTrainsList as $train) {
             // $newTrain = new Train();
@@ -57,8 +32,19 @@ class TrainSeeder extends Seeder
             // $newTrain->save();
         // }
 
-        foreach ($testTrainsList as $train) {
-            Train::create($train);
+        for($i = 0; $i < 100 ; $i++) {
+            Train::create([
+                'company' => $faker->company,
+                'departure_station' => $faker->city,
+                'arrival_station' => $faker->city,
+                'departure_time' => $faker->dateTimeThisYear($max = 'now', $timezone = null),
+                'arrival_time' => $faker->dateTimeThisYear($max = 'now', $timezone = null),
+                'train_code' => $faker->bothify('???######'),
+                'num_carriages' => $faker->numberBetween(1, 10),
+                'on_time' => $faker->boolean(80), // 80% chance of being true (on time)
+                'canceled' => $faker->boolean(5), // 5% chance of being true (canceled)
+                'additional_info' => $faker->optional()->paragraph, // Optional paragraph for additional info
+            ]);
         }
     }
 }
